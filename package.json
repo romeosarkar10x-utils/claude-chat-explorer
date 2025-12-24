@@ -1,22 +1,21 @@
 {
-  "name": "claude-chat-explorer",
-
-  "author": "Romeo Sarkar",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/romeosarkar10x-utils/claude-chat-explorer"
-  },
-  "type": "module",
-  "private": true,
-  "scripts": {
-    "check-formatting": "prettier --check \"**/*.{mjs,ts,json}\"",
-    "format": "prettier --write \"**/*.{mjs,ts,json}\""
-  },
-  "devDependencies": {
-    "@types/bun": "latest",
-    "prettier": "^3.7.4"
-  },
-  "peerDependencies": {
-    "typescript": "^5.9.3"
-  }
+    "name": "claude-chat-explorer",
+    "author": "Romeo Sarkar",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/romeosarkar10x-utils/claude-chat-explorer"
+    },
+    "type": "module",
+    "private": true,
+    "scripts": {
+        "check-formatting": "prettier --check \"**/*.{mjs,ts,json}\"",
+        "format": "prettier --write \"**/*.{mjs,ts,json}\""
+    },
+    "devDependencies": {
+        "@types/bun": "latest",
+        "prettier": "^3.7.4"
+    },
+    "peerDependencies": {
+        "typescript": "^5.9.3"
+    }
 }
