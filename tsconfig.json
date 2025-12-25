@@ -16,6 +16,7 @@
 
         // Best practices
         "strict": true,
+        "exactOptionalPropertyTypes": true,
         "skipLibCheck": true,
         "noFallthroughCasesInSwitch": true,
         "noUncheckedIndexedAccess": true,
@@ -24,6 +25,11 @@
         // Some stricter flags (disabled by default)
         "noUnusedLocals": false,
         "noUnusedParameters": false,
-        "noPropertyAccessFromIndexSignature": false
-    }
+        "noPropertyAccessFromIndexSignature": false,
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["src/*"]
+        }
+    },
+    "include": ["src/**/*", "tests/**/*"]
 }

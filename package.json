@@ -8,6 +8,7 @@
     "type": "module",
     "private": true,
     "scripts": {
+        "main": "bun --env-file=.env src/main.ts",
         "check-formatting": "prettier --check \"**/*.{mjs,ts,json}\"",
         "format": "prettier --write \"**/*.{mjs,ts,json}\""
     },
@@ -17,5 +18,10 @@
     },
     "peerDependencies": {
         "typescript": "^5.9.3"
+    },
+    "dependencies": {
+        "cleye": "^2.2.1",
+        "neverthrow": "^8.2.0",
+        "zod": "^4.2.1"
     }
 }
