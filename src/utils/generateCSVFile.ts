@@ -2,6 +2,8 @@ import z from "zod";
 import fs from "fs/promises";
 import { ChatSchema } from "@/schemas/chat";
 import path from "path";
+import consola from "consola";
+import { logger } from "./logger";
 
 export async function generateCSVFile(
     chats: Array<z.infer<typeof ChatSchema>>,
@@ -40,5 +42,5 @@ export async function generateCSVFile(
 
     const outputFilePath = path.join(process.cwd(), outputFileName);
     await fs.writeFile(outputFilePath, str, "utf-8");
-    console.log(`Output file: ${outputFilePath}`);
+    logger.log(`Output file: ${outputFilePath}`);
 }

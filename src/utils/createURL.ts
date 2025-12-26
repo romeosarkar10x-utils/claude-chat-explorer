@@ -10,7 +10,13 @@ export async function createURL(limit: number) {
     }
 
     const env = result.value;
+    const orgID = env.get("ORG_ID");
+
+    if (orgID === undefined) {
+        return NoThrow.err(new Error("'orgID' is required"));
+    }
+
     return NoThrow.ok(
-        `https://${API_URL}/organizations/${env.get("ORG_ID")}/chat_conversations?limit=${limit}`,
+        `https://${API_URL}/organizations/${orgID}/chat_conversations?limit=${limit}`,
     );
 }

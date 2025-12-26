@@ -21,6 +21,7 @@
     },
     "dependencies": {
         "cleye": "^2.2.1",
+        "consola": "^3.4.2",
         "neverthrow": "^8.2.0",
         "zod": "^4.2.1"
     }

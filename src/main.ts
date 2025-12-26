@@ -4,6 +4,7 @@ import { getChats } from "./utils/getChats";
 import { cli } from "cleye";
 import { envPromise, EnvSchema } from "./env";
 import * as NoThrow from "neverthrow";
+import { logger } from "./utils/logger";
 
 async function main() {
     const args = cli({
@@ -41,7 +42,6 @@ async function main() {
     });
 
     const flags = args.flags;
-    const result = await getChats(flags.limit);
 
     const setEnvResult = await setEnvironmentVariables(
         flags.orgId,
@@ -51,12 +51,14 @@ async function main() {
     );
 
     if (setEnvResult.isErr()) {
-        console.error(setEnvResult.error);
+        logger.error(setEnvResult.error);
         process.exit(-1);
     }
 
+    const result = await getChats(flags.limit);
+
     if (result.isErr()) {
-        console.error(result.error);
+        logger.error(result.error);
         process.exit(-1);
     }
 
@@ -71,18 +73,25 @@ async function setEnvironmentVariables(
     cfClearanceCookie: string | undefined,
     cfBotManagementCookie: string | undefined,
 ) {
-    const envArgsResult = await EnvSchema.safeDecodeAsync({
+    const cmdLineArgsResult = await EnvSchema.safeDecodeAsync({
         ORG_ID: orgID,
         SESSION_KEY_COOKIE: sessionKeyCookie,
         CF_CLEARANCE_COOKIE: cfClearanceCookie,
         CF_BOT_MANAGEMENT_COOKIE: cfBotManagementCookie,
     });
 
-    if (!envArgsResult.success) {
-        return NoThrow.err(z.prettifyError(envArgsResult.error));
+    if (!cmdLineArgsResult.success) {
+        return NoThrow.err(z.prettifyError(cmdLineArgsResult.error));
     }
 
-    const envArgs = envArgsResult.data;
+    const cmdLineArgs = cmdLineArgsResult.data;
+    const {
+        ORG_ID,
+        SESSION_KEY_COOKIE,
+        CF_BOT_MANAGEMENT_COOKIE,
+        CF_CLEARANCE_COOKIE,
+    } = cmdLineArgs;
+
     const envResult = await envPromise;
 
     if (envResult.isErr()) {
@@ -91,20 +100,20 @@ async function setEnvironmentVariables(
 
     const env = envResult.value;
 
-    if (envArgs.ORG_ID !== undefined) {
-        env.set("ORG_ID", envArgs.ORG_ID);
+    if (ORG_ID !== undefined) {
+        env.set("ORG_ID", ORG_ID);
     }
 
-    if (envArgs.SESSION_KEY_COOKIE !== undefined) {
-        env.set("SESSION_KEY_COOKIE", envArgs.SESSION_KEY_COOKIE);
+    if (SESSION_KEY_COOKIE !== undefined) {
+        env.set("SESSION_KEY_COOKIE", SESSION_KEY_COOKIE);
     }
 
-    if (envArgs.CF_CLEARANCE_COOKIE !== undefined) {
-        env.set("CF_CLEARANCE_COOKIE", envArgs.CF_CLEARANCE_COOKIE);
+    if (CF_CLEARANCE_COOKIE !== undefined) {
+        env.set("CF_CLEARANCE_COOKIE", CF_CLEARANCE_COOKIE);
     }
 
-    if (envArgs.CF_BOT_MANAGEMENT_COOKIE !== undefined) {
-        env.set("CF_BOT_MANAGEMENT_COOKIE", envArgs.CF_BOT_MANAGEMENT_COOKIE);
+    if (CF_BOT_MANAGEMENT_COOKIE !== undefined) {
+        env.set("CF_BOT_MANAGEMENT_COOKIE", CF_BOT_MANAGEMENT_COOKIE);
     }
 
     return NoThrow.ok();

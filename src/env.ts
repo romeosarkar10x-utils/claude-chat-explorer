@@ -18,7 +18,7 @@ class Env {
     }
 
     set<Key extends keyof EnvType>(key: Key, value: string): void {
-        this.envObject[key] = key;
+        this.envObject[key] = value;
     }
 }
 

@@ -3,6 +3,7 @@ import { ChatSchema } from "@/schemas/chat";
 import { envPromise } from "@/env";
 import { createURL } from "@/utils/createURL";
 import * as NoThrow from "neverthrow";
+import { logger } from "./logger";
 
 async function parseBodyAsJSON(res: Response) {
     try {
@@ -21,7 +22,7 @@ async function parseBodyAsJSON(res: Response) {
             return NoThrow.err(err);
         }
 
-        console.error(err);
+        logger.error(err);
         return NoThrow.err(new Error("Unknown err"));
     }
 }
@@ -39,7 +40,7 @@ async function parseBodyAsText(res: Response) {
             return NoThrow.err(err);
         }
 
-        console.error(err);
+        logger.error(err);
         return NoThrow.err(new Error("Unknown err"));
     }
 }
@@ -61,7 +62,7 @@ async function parseBodyAsBytes(res: Response) {
             return NoThrow.err(err);
         }
 
-        console.error(err);
+        logger.error(err);
         return NoThrow.err(new Error("Unknown err"));
     }
 }
@@ -70,7 +71,7 @@ async function doFetch(url: string, init?: RequestInit) {
 
     if (res.status !== 200) {
         const status = res.status;
-        const headers = res.headers;
+        const headers = res.headers.toJSON();
 
         let bodyAsJSONResult = await parseBodyAsJSON(res);
 
@@ -112,7 +113,7 @@ export async function getChats(limit: number) {
     const envResult = await envPromise;
 
     if (envResult.isErr()) {
-        console.error(envResult.error);
+        logger.error(envResult.error);
         return envResult;
     }
 
@@ -121,31 +122,32 @@ export async function getChats(limit: number) {
     const urlResult = await createURL(limit);
 
     if (urlResult.isErr()) {
-        console.error(urlResult);
+        logger.error(urlResult);
         return urlResult;
     }
 
     const url = urlResult.value;
+    logger.info("URL:", url);
 
-    const sessionKey = env.get("SESSION_KEY_COOKIE");
+    const sessionKeyCookie = env.get("SESSION_KEY_COOKIE");
     const cfClearanceCookie = env.get("CF_CLEARANCE_COOKIE");
     const botManagementCookie = env.get("CF_BOT_MANAGEMENT_COOKIE");
 
-    if (sessionKey === undefined) {
-        console.error("'sessionKey' is undefined");
-        return NoThrow.err(new Error("'sessionKey' is required"));
+    if (sessionKeyCookie === undefined) {
+        logger.error("'sessionKeyCookie' is undefined");
+        return NoThrow.err(new Error("'sessionKeyCookie' is required"));
     }
 
     if (cfClearanceCookie === undefined) {
-        console.warn("'cfClearanceCookie' is undefined");
+        logger.warn("'cfClearanceCookie' is undefined");
     }
 
     if (botManagementCookie === undefined) {
-        console.warn("'botManagementCookie' is undefined");
+        logger.warn("'botManagementCookie' is undefined");
     }
 
     const cookie = [
-        `sessionKey=${sessionKey}`,
+        `sessionKey=${sessionKeyCookie}`,
         cfClearanceCookie !== undefined
             ? `cf_clearance=${cfClearanceCookie}`
             : undefined,
