@@ -5,8 +5,14 @@ import path from "path";
 
 export async function generateCSVFile(
     chats: Array<z.infer<typeof ChatSchema>>,
-    outputFileName: string,
+    outputFileName: string | undefined,
 ) {
+    if (outputFileName === undefined) {
+        const dateTime = new Date();
+        const str = dateTime.toISOString().replaceAll(":", "-").toLowerCase();
+        outputFileName = `chats.${str}.csv`;
+    }
+
     const columns = ["Name", "CreatedAt", "UpdatedAt", "UUID"];
 
     function sanitize(input: string) {

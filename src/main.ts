@@ -19,7 +19,6 @@ async function main() {
             outputFile: {
                 type: String,
                 description: "Output file name",
-                default: "chats.csv",
                 alias: "o",
             },
             orgId: {
