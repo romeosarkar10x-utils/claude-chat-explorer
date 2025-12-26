@@ -12,9 +12,9 @@ async function main() {
         flags: {
             limit: {
                 type: Number,
-                description: "Number of chats retreived",
+                description: "Number of chats to retrieve",
                 alias: "l",
-                default: 10,
+                default: 30,
             },
             outputFile: {
                 type: String,
