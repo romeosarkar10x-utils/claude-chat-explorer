@@ -1,8 +1,8 @@
 import { describe, expect, test } from "bun:test";
 import { ChatSchema } from "@/schemas/chat";
 
-describe("ChatSchema test", () => {
-    test("", () => {
+describe("ChatSchema", () => {
+    test("Happy payload", () => {
         const payload = {
             uuid: "b498bf78-ad01-47a4-99c6-4f11f4dd576e",
             name: "String literal type constraints in TypeScript",
@@ -41,11 +41,6 @@ describe("ChatSchema test", () => {
         };
 
         const parsed = ChatSchema.safeParse(payload);
-
         expect(parsed.success).toBe(true);
-
-        if (parsed.success) {
-            console.log(parsed.data.createdAt.constructor.name);
-        }
     });
 });

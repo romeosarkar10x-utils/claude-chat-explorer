@@ -11,6 +11,6 @@ export async function createURL(limit: number) {
 
     const env = result.value;
     return NoThrow.ok(
-        `https://${API_URL}/organizations/${env.ORG_ID}/chat_conversations?limit=${limit}`,
+        `https://${API_URL}/organizations/${env.get("ORG_ID")}/chat_conversations?limit=${limit}`,
     );
 }

@@ -78,7 +78,7 @@ async function doFetch(url: string, init?: RequestInit) {
             return NoThrow.err({
                 status,
                 headers,
-                body: bodyAsJSONResult.value,
+                body: JSON.stringify(bodyAsJSONResult.value),
             });
         }
 
@@ -105,7 +105,6 @@ async function doFetch(url: string, init?: RequestInit) {
         return NoThrow.err({ status, headers });
     }
 
-    console.log(res.status);
     return parseBodyAsJSON(res);
 }
 
@@ -128,11 +127,25 @@ export async function getChats(limit: number) {
 
     const url = urlResult.value;
 
-    const cfClearanceCookie = env.CF_CLEARANCE_COOKIE;
-    const botManagementCookie = env.CF_BOT_MANAGEMENT_COOKIE;
+    const sessionKey = env.get("SESSION_KEY_COOKIE");
+    const cfClearanceCookie = env.get("CF_CLEARANCE_COOKIE");
+    const botManagementCookie = env.get("CF_BOT_MANAGEMENT_COOKIE");
+
+    if (sessionKey === undefined) {
+        console.error("'sessionKey' is undefined");
+        return NoThrow.err(new Error("'sessionKey' is required"));
+    }
+
+    if (cfClearanceCookie === undefined) {
+        console.warn("'cfClearanceCookie' is undefined");
+    }
+
+    if (botManagementCookie === undefined) {
+        console.warn("'botManagementCookie' is undefined");
+    }
 
     const cookie = [
-        `sessionKeyX=${env.SESSION_KEY_COOKIE}`,
+        `sessionKey=${sessionKey}`,
         cfClearanceCookie !== undefined
             ? `cf_clearance=${cfClearanceCookie}`
             : undefined,
